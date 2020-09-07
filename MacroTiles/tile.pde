@@ -64,7 +64,6 @@ class tile
       t_g = int(green(c));
       t_b = int(blue (c));
             
-      println("Target is: ", t_r, " ", t_g, " ", t_b);
       Ani.to(this, 1/speed, "r", t_r);
       Ani.to(this, 1/speed, "g", t_g);
       Ani.to(this, 1/speed, "b", t_b);

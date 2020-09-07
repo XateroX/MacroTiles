@@ -11,6 +11,8 @@ class gui
   int c_box_b;
   int c_box_alpha;
   int tar_c_box_alpha;
+  float c_box_scroll;
+  float tar_c_box_scroll;
     //
   
   ArrayList<slider> held_sliders;
@@ -21,12 +23,14 @@ class gui
   void init()
   {
       //Macroman GUI variables
-    c_box_ani_ready = true;
-    c_box_r         = 100;
-    c_box_g         = 100;
-    c_box_b         = 200;
-    c_box_alpha     = 0;
-    tar_c_box_alpha = 0;
+    c_box_ani_ready  = true;
+    c_box_r          = 100;
+    c_box_g          = 100;
+    c_box_b          = 200;
+    c_box_alpha      = 0;
+    tar_c_box_alpha  = 0;
+    c_box_scroll     = 1000;
+    tar_c_box_scroll = 0;
     c_box_col = color(c_box_r, c_box_g, c_box_b);
       //
     
@@ -38,9 +42,27 @@ class gui
     tar_macroman = new macroman( new PVector(-1,-1) );  //Blank placeholder macroman
       //
       
-      //Setup test button
-    button test_button = get_button("Test Button"); 
-    test_button.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*2, map.get_tileSize()*2 );
+      //Setup buttons
+    button U = get_button("U Button"); 
+    button D = get_button("D Button"); 
+    button L = get_button("L Button"); 
+    button R = get_button("R Button"); 
+    U.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*2.0, map.get_tileSize()*1.5 );
+    D.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*2.0, map.get_tileSize()*4.5 );
+    L.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*0.5, map.get_tileSize()*3 );
+    R.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*3.5, map.get_tileSize()*3 );
+    
+    button FT = get_button("FT Button"); 
+    button RT = get_button("RT Button"); 
+    button GT = get_button("GT Button"); 
+    button BT = get_button("BT Button"); 
+    FT.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*7.50, map.get_tileSize()*2 );
+    RT.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*5.75, map.get_tileSize()*4 );
+    GT.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*7.50, map.get_tileSize()*4 );
+    BT.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*9.25, map.get_tileSize()*4 );
+    
+    button DLT = get_button("DLT Button");
+    DLT.set_pos( map.dim()[0]*map.get_tileSize() + map.get_tileSize()*0.3, map.get_tileSize()*0.0 );
       //
   }
   
@@ -51,7 +73,17 @@ class gui
     sliders.add( new slider("Speed Slider") );  //Slider for the top of the map (speed of the game)
     
     buttons      = new ArrayList<button>();
-    buttons.add( new button("Test Button") );
+    buttons.add( new button("U Button", "U") );
+    buttons.add( new button("D Button", "D") );
+    buttons.add( new button("L Button", "L") );
+    buttons.add( new button("R Button", "R") );
+    
+    buttons.add( new button("FT Button", "FT") );
+    buttons.add( new button("RT Button", "RT") );
+    buttons.add( new button("GT Button", "GT") );
+    buttons.add( new button("BT Button", "BT") );
+    
+    buttons.add( new button("DLT Button", "DLT") );
     
     init();
   }
@@ -77,8 +109,6 @@ class gui
     
     if ( get_mode().equals("macroman") )
     {draw_macroman_gui(tar_macroman);}
-    
-    
   }
   
   void get_input()
@@ -98,6 +128,56 @@ class gui
       }
     }
     return sliders.get(c_ind);  //May try to get -1, as seen above this means there was no slider with this name
+  }
+  
+  
+  
+  void evaluate(String i_type)  //Buttons use this to do things
+  {
+    if      (i_type.equals("U"))
+    {/*Add U to the macroman's commands*/}
+    else if (i_type.equals("D"))
+    {/*Add D to the macroman's commands*/}
+    else if (i_type.equals("L"))
+    {/*Add L to the macroman's commands*/}
+    else if (i_type.equals("R"))
+    {/*Add R to the macroman's commands*/}
+    
+    else if (i_type.equals("FT"))
+    {/*Add FT to the macroman's commands*/}
+    else if (i_type.equals("RT"))
+    {/*Add RT to the macroman's commands*/}
+    else if (i_type.equals("GT"))
+    {/*Add GT to the macroman's commands*/}
+    else if (i_type.equals("BT"))
+    {/*Add BT to the macroman's commands*/}
+    
+    else if (i_type.equals("J"))
+    {/*Add J to the macroman's commands*/}
+    else if (i_type.equals("rJ"))
+    {/*Add rJ to the macroman's commands*/}
+    
+    else if (i_type.equals("RESET"))
+    {/*Add RESET to the macroman's commands*/}
+    
+    if (!i_type.equals("DLT"))
+    {
+      tar_macroman.append_commands(i_type);
+      tar_macroman.reset_man();
+    }else if (i_type.equals("DLT"))
+    {
+      tar_macroman.pop_commands();
+    }
+  }
+  
+  
+  
+  boolean check_overlap()
+  {
+    boolean overlap = false;
+    if (check_button_overlap()) overlap = true;
+    if (check_slider_overlap()) overlap = true;
+    return overlap;
   }
   
   button get_button(String name)
@@ -160,7 +240,11 @@ class gui
     set_mode("macroman");
     set_tar_macroman(c_mMan);
     set_tar_c_box_alpha(255);
-    Ani.to(this, 10, "c_box_alpha", get_tar_c_box_alpha());
+    Ani.to(this, 2, "c_box_alpha", get_tar_c_box_alpha());
+    for (button c_button : buttons)
+    {
+      c_button.ani_alpha(255);
+    }
     c_box_ani_ready = false;
   }
   void set_mode()
@@ -168,7 +252,7 @@ class gui
     map.default_ani();
     set_mode("-1");
     set_tar_c_box_alpha(0);
-    Ani.to(this, 4, "c_box_alpha", get_tar_c_box_alpha());
+    Ani.to(this, 2, "c_box_alpha", get_tar_c_box_alpha());
     c_box_ani_ready = false;
   }
   
@@ -183,6 +267,7 @@ class gui
     pushMatrix();
     pushStyle();
     
+    c_box_scroll = c_mMan.get_commands().size() * ((5*width/4 - 3*map.dim()[0]*map.get_tileSize()/2) * 0.75 / 20);
       //Initially, move the origin to a better place
     translate( -map.get_tileSize()/2 + map.get_tileSize()*map.dim()[0] , -map.get_tileSize()/2 );
     translate( (5*width/4 - 3*map.dim()[0]*map.get_tileSize()/2) / 2, 0 );
@@ -193,7 +278,7 @@ class gui
     strokeWeight(map.get_tileSize()*0.1);
     
     translate(0 , map.get_tileSize()/2);
-    rect(0,0 ,(5*width/4 - 3*map.dim()[0]*map.get_tileSize()/2) * 0.75, map.get_tileSize());
+    rect(0,0 , 0.75 * (5*width/4 - 3*map.dim()[0]*map.get_tileSize()/2), map.get_tileSize());
     fill(220);
     
       //Display the commands of the macroman in the box
@@ -207,17 +292,13 @@ class gui
   {
     String command_string = "";
     ArrayList<String> c_command_list = c_mMan.get_commands();
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < c_command_list.size(); i++)
     {
       if (c_command_list.size() > i)
       {
         String c_command = c_command_list.get(i);
         command_string = command_string + c_command + " ";
       }
-    }
-    if (c_command_list.size() > 10)
-    {
-      command_string = command_string + "...";
     }
     textSize((5*width/4 - 3*map.dim()[0]*map.get_tileSize()/2) * 0.75 / 20);
     text(command_string,0,-map.get_tileSize()/10);
@@ -228,7 +309,43 @@ class gui
   }
   
   
+  boolean check_button_overlap()
+  {
+    boolean overlap = false;
+    for (button c_button : buttons)
+    {
+      if ( c_button.is_overlapped( map.transform(new PVector(mouseX, mouseY)) ) )
+      {
+        overlap = true;
+        break;
+      }
+    }
+    return overlap;
+  }
   
+  void reset_buttons()
+  {
+    for (button c_button : buttons)
+    {
+      c_button.set_held(false);
+    }
+  }
+  
+  boolean check_slider_overlap()
+  {
+    boolean overlap = false;
+    PVector mouse = new PVector(mouseX,mouseY);
+    PVector rel_mouse = map.transform(mouse);
+    for (slider c_slider : sliders)
+    {
+      if ( c_slider.check_clicked(rel_mouse) )
+      {
+        overlap = true;
+        break;
+      }
+    }
+    return overlap;
+  }
   
   
     //### Get/Set methods ###//

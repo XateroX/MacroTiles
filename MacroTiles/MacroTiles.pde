@@ -27,7 +27,7 @@ void setup()
   
   Ani.init(this);
   mMen = new ArrayList<macroman>();
-  for (int i = 0; i < 3; i ++)
+  for (int i = 0; i < 5; i ++)
   {
     mMen.add( new macroman( new PVector(map.get_tileSize()*floor(random(map.dim()[0])),map.get_tileSize()*floor(random(map.dim()[1]))) ) );
   }
@@ -44,15 +44,15 @@ void setup()
   options.add("GT");
   options.add("BT");
   
-  options.add("RESET");
+  //options.add("RESET");
   
   options.add("J");
   //options.add("rJ");
   
   for (int j = 0; j < mMen.size(); j++){
-    for (int i = 0; i < 20; i++)  // Generate random path of x moves
+    for (int i = 0; i < 5; i++)  // Generate random path of x moves
     { 
-      mMen.get(j).set_c_commands( options.get( floor(random(options.size())) ) );  //Default Macro
+      mMen.get(j).append_commands( options.get( floor(random(options.size())) ) );  //Default Macro
     }
   }
 }
@@ -96,17 +96,22 @@ void mousePressed()
   }
   if (mouse_has_been_released)
   {
-    boolean overlap = false;
+      //Boolean for macromen
+    boolean overlap1 = false;
     for (macroman c_mMan : mMen)
     {
       if (c_mMan.check_clicked())
       {
         gui.set_mode(c_mMan);
-        overlap = true;
+        overlap1 = true;
         break;
       }
     }
-    if (!overlap)
+      //Boolean for gui
+    boolean overlap2;
+    overlap2 = gui.check_overlap();
+    
+    if (!(overlap1 || overlap2))  //When clicking off of things, go to default
     {
       gui.set_mode();  //Default mode
       for (macroman c_mMan : mMen)
@@ -119,4 +124,5 @@ void mousePressed()
 void mouseReleased()
 {
   mouse_has_been_released = true;
+  gui.reset_buttons();
 }

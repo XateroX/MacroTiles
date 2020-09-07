@@ -53,10 +53,11 @@ class macroman
   {
     tarx = i_px;
     tary = i_py;
-    Ani.to(this, 0.25, "px", tarx);
-    Ani.to(this, 0.25, "py", tary);
+    Ani.to(this, 0.1, "px", tarx);
+    Ani.to(this, 0.1, "py", tary);
      //<>//
     ani_ready = false;
+    exe_ready = false;
   }
   
   
@@ -270,12 +271,34 @@ class macroman
   
   
     //### Get/Set variables ###//
-  void set_c_commands(String commandString)
+  void append_commands(String n_string)
   {
+    commands.add(n_string);
+  }
+  void pop_commands()
+  {
+    commands.remove( commands.size()-1 );
+    reset_man();
+  }
+  void set_commands(String commandString)
+  {
+    commands      = new ArrayList<String>();
+    temp_commands = new ArrayList<String>();
     String[] listCommandString = split(commandString, ";");
     for (int i = 0; i < listCommandString.length; i++)
     {  
       String let = listCommandString[i];
+      commands     .add(let);
+      temp_commands.add(let);
+    }
+  }
+  void set_commands(ArrayList<String> commandString)
+  {
+    commands      = new ArrayList<String>();
+    temp_commands = new ArrayList<String>();
+    for (int i = 0; i < commandString.size(); i++)
+    {  
+      String let = commandString.get(i);
       commands     .add(let);
       temp_commands.add(let);
     }
