@@ -90,6 +90,7 @@ class macroman
         else if (c_command.equals("RESET")) RESET();
         else if (c_command.equals("J"))  J();
         else if (c_command.equals("rJ")) rJ();
+        else if (c_command.substring(0,2).equals("IF")) {evaluate_IF(c_command);};
         temp_commands.remove(0);
       }else{
         if (px == tarx && py == tary)
@@ -100,6 +101,10 @@ class macroman
     }
   }
   
+  
+  void evaluate_IF(String c_command)
+  {
+  }
   
   void step(float size, int dx, int dy)
   {

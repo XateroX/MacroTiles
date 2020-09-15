@@ -65,7 +65,6 @@ class tileholder
     {
       macroman_mode_ani_ready = true;
       token1 = -1;
-      println(macroman_mode_ani_ready);
     }
   }
   

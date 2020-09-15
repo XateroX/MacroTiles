@@ -6,50 +6,69 @@ boolean mouse_has_been_released;
 ArrayList<macroman> mMen;
 boolean global_mMan_ready;
 tileholder map;
-gui gui;
+GUI gui;
 
 float speed;
+
+ArrayList<String> def_commands;
 
 void setup()
 {
   fullScreen();
   frameRate(60);
   rectMode(CENTER);
-  textAlign(CENTER,CENTER);
+  textAlign(CENTER, CENTER);
   textSize(30);
   global_mMan_ready = true;
   mouse_has_been_released = true;
-  
-  speed = 2;
 
-  map = new tileholder(10,10);
-  gui = new gui();
-  
+  //Defining the default (basic) commands
+  def_commands = new ArrayList<String>();
+  def_commands.add( "U" );
+  def_commands.add( "D" );
+  def_commands.add( "L" );
+  def_commands.add( "R" );
+
+  def_commands.add( "FT" );
+  def_commands.add( "RT" );
+  def_commands.add( "GT" );
+  def_commands.add( "BT" );
+
+  def_commands.add( "RESET" );
+
+  def_commands.add( "J" );
+  def_commands.add( "rJ" );
+  //
+
+  speed = 2;
+  map = new tileholder(10, 10);
+  gui = new GUI();
+
   Ani.init(this);
   mMen = new ArrayList<macroman>();
   for (int i = 0; i < 5; i ++)
   {
-    mMen.add( new macroman( new PVector(map.get_tileSize()*floor(random(map.dim()[0])),map.get_tileSize()*floor(random(map.dim()[1]))) ) );
+    mMen.add( new macroman( new PVector(map.get_tileSize()*floor(random(map.dim()[0])), map.get_tileSize()*floor(random(map.dim()[1]))) ) );
   }
-  
-  
+
+
   ArrayList<String> options = new ArrayList<String>();
   options.add("U");
   options.add("D");
   options.add("L");
   options.add("R");//
-  
+
   options.add("FT");
   options.add("RT");
   options.add("GT");
   options.add("BT");
-  
+
   //options.add("RESET");
-  
+
   options.add("J");
   //options.add("rJ");
-  
-  for (int j = 0; j < mMen.size(); j++){
+
+  for (int j = 0; j < mMen.size(); j++) {
     for (int i = 0; i < 5; i++)  // Generate random path of x moves
     { 
       mMen.get(j).append_commands( options.get( floor(random(options.size())) ) );  //Default Macro
@@ -58,13 +77,13 @@ void setup()
 }
 void draw()
 {
-  background(200,200,255);
+  background(200, 200, 255);
   pushMatrix();
   translate(width/2 - map.get_x_shift(), height/2 - map.get_y_shift());
   translate(map.get_tileSize()/2-map.get_tileSize()*map.dim()[0]/2 + map.get_cameraX(), map.get_tileSize()/2-map.get_tileSize()*map.dim()[1]/2 + map.get_cameraY());
-  
+
   map.update();
-  
+
   global_mMan_ready = true;
   for (macroman c_macroman : mMen)
   {
@@ -73,18 +92,18 @@ void draw()
   for (macroman c_macroman : mMen)
   {
     if (speed > 0)  //So that the animations don't take infinite time
-    {c_macroman.exe();}
+    {
+      c_macroman.exe();
+    }
     c_macroman.drawme();
   }   
-  //map.set_cameraX((width/4) * sin((float)frameCount/60));
-  //map.set_cameraY(0);
   gui.get_input();
   speed = gui.get_slider("Speed Slider").value* 100;
   gui.drawme();
 
   popMatrix();
-    //FPS Counter
-  text("FPS: " + round(frameRate), 100,20);
+  //FPS Counter
+  text("FPS: " + round(frameRate), 100, 20);
 }
 
 
@@ -96,7 +115,7 @@ void mousePressed()
   }
   if (mouse_has_been_released)
   {
-      //Boolean for macromen
+    //Boolean for macromen
     boolean overlap1 = false;
     for (macroman c_mMan : mMen)
     {
@@ -107,18 +126,33 @@ void mousePressed()
         break;
       }
     }
-      //Boolean for gui
+    
+    //Boolean for gui
     boolean overlap2;
     overlap2 = gui.check_overlap();
-    
-    if (!(overlap1 || overlap2))  //When clicking off of things, go to default
+
+    if (!(overlap1 || overlap2) && !gui.get_mode().equals("macroman_if_selection"))  //When clicking off of things, go to default
     {
       gui.set_mode();  //Default mode
       for (macroman c_mMan : mMen)
-      {c_mMan.set_is_selected(false);}
-    }
+      {
+        c_mMan.set_is_selected(false);
+      }
+    } 
   }
   mouse_has_been_released = false;
+}
+
+boolean is_def_command(String tar_command)
+{
+  for (String c_command : def_commands)
+  {
+    if (c_command.equals(tar_command))
+    {
+      return true;
+    }
+  }
+  return false;
 }
 
 void mouseReleased()
