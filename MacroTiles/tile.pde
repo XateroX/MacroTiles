@@ -13,7 +13,7 @@ class tile
   
   tile(int x, int y)
   {
-    def_col = color(175, 175, 255);
+    def_col = color(50, 50, 100);
     
     p = new int[2];
     p[0] = x;
@@ -21,13 +21,13 @@ class tile
     
     ani_ready = true;
     
-    r = 175;
-    g = 175;
-    b = 255;
+    r = round(red(def_col));
+    g = round(green(def_col));
+    b = round(blue(def_col));
     
-    t_r = 175;
-    t_g = 175;
-    t_b = 255;
+    t_r = r;
+    t_g = g;
+    t_b = g;
     
   }
   
@@ -42,7 +42,7 @@ class tile
     
     color c_col = get_col();
     fill(red(c_col), green(c_col), blue(c_col));
-    stroke(110);
+    stroke(150);
     strokeWeight(size/10);
     //noStroke();
     rect(0,0, size+1,size+1);

@@ -1,5 +1,13 @@
+import processing.sound.*;
+
+import ch.bildspur.postfx.builder.*;
+import ch.bildspur.postfx.pass.*;
+import ch.bildspur.postfx.*;
+
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
+
+PostFX fx;
 
 boolean mouse_has_been_released;
 
@@ -14,7 +22,7 @@ ArrayList<String> def_commands;
 
 void setup()
 {
-  fullScreen();
+  size(1920, 1080, P2D);
   frameRate(60);
   rectMode(CENTER);
   textAlign(CENTER, CENTER);
@@ -65,7 +73,7 @@ void setup()
 
   //options.add("RESET");
 
-  options.add("J");
+  //options.add("J");
   //options.add("rJ");
 
   for (int j = 0; j < mMen.size(); j++) {
@@ -74,10 +82,12 @@ void setup()
       mMen.get(j).append_commands( options.get( floor(random(options.size())) ) );  //Default Macro
     }
   }
+
+  fx = new PostFX(this);
 }
 void draw()
 {
-  background(200, 200, 255);
+  background(20, 20, 50);
   pushMatrix();
   translate(width/2 - map.get_x_shift(), height/2 - map.get_y_shift());
   translate(map.get_tileSize()/2-map.get_tileSize()*map.dim()[0]/2 + map.get_cameraX(), map.get_tileSize()/2-map.get_tileSize()*map.dim()[1]/2 + map.get_cameraY());
@@ -104,6 +114,13 @@ void draw()
   popMatrix();
   //FPS Counter
   text("FPS: " + round(frameRate), 100, 20);
+
+    //Enable Bloom
+  //fx.render()
+    //.bloom(0.9, 20, 5)
+    //.bloom(0.3, 5, 5)
+    //.sobel()
+    //.compose();
 }
 
 
@@ -126,7 +143,7 @@ void mousePressed()
         break;
       }
     }
-    
+
     //Boolean for gui
     boolean overlap2;
     overlap2 = gui.check_overlap();
@@ -138,7 +155,7 @@ void mousePressed()
       {
         c_mMan.set_is_selected(false);
       }
-    } 
+    }
   }
   mouse_has_been_released = false;
 }

@@ -35,9 +35,9 @@ class button
     x_dim = 100;
     y_dim = 100;
 
-    r = 100;
-    g = 100;
-    b = 150;
+    r = 150;
+    g = 80;
+    b = 80;
     def_col = color(r, g, b);
     alpha           = 0;
     tar_alpha       = 0;

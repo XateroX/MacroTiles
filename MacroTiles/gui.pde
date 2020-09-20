@@ -315,7 +315,7 @@ class GUI
     {
       if_selection_ani_ready = false;
       tar_if_sel_val = 1;
-      Ani.to(this, 1, "if_sel_val", tar_if_sel_val);
+      Ani.to(this, 0.5, "if_sel_val", tar_if_sel_val);
     }
   }
   void reverse_if_selection_ani()
@@ -324,7 +324,7 @@ class GUI
     {
       if_selection_ani_ready = false;
       tar_if_sel_val = 0;
-      Ani.to(this, 1, "if_sel_val", tar_if_sel_val);
+      Ani.to(this, 0.5, "if_sel_val", tar_if_sel_val);
     }
   }
   
